@@ -1,60 +1,45 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://github.com/ovaltinegif/projek-pkm" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://github.com/ovaltinegif/projek-pkm/actions"><img src="https://img.shields.io/github/actions/workflow/status/ovaltinegif/projek-pkm/tests.yml?branch=main" alt="Build Status"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# DEN-Sentinel (Proyek PKM)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tentang DEN-Sentinel
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+DEN-Sentinel adalah sistem aplikasi pemantauan Demam Berdarah Dengue (DBD) berbasis *Internet of Things* (IoT) yang dibangun dengan sintaks ekspresif dan elegan dari kerangka kerja Laravel. Kami merancang sistem ini agar pengelolaan data lingkungan yang kompleks menjadi lebih terstruktur dan mudah dianalisis, dengan fitur-fitur seperti:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Pemantauan dasbor secara real-time](#).
+- [Pemetaan sebaran risiko geografis interaktif dengan Leaflet JS](#).
+- [Analisis tren suhu dan kelembaban harian menggunakan ApexCharts](#).
+- [Algoritma kalkulasi tingkat risiko DBD yang berjalan otomatis](#).
+- [Endpoint API IoT terintegrasi untuk komunikasi perangkat sensor](#).
 
-## Learning Laravel
+DEN-Sentinel tangguh, mudah diakses, dan menyediakan alat yang dibutuhkan untuk mitigasi penyebaran nyamuk skala wilayah.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Logika Kalkulasi Risiko
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Sistem mengevaluasi ancaman secara objektif berdasarkan skor parameter lingkungan. Algoritma ini berjalan otomatis di `SensorController`:
 
-## Laravel Sponsors
+* **Suhu (Bobot 30%)**: 30 poin (25-30°C ideal nyamuk); 10 poin (> 30°C).
+* **Kelembaban (Bobot 30%)**: 30 poin (> 75%); 15 poin (> 60%).
+* **Genangan/Hujan (Bobot 40%)**: 40 poin (Ketinggian air > 2m atau Curah Hujan > 10mm); 20 poin (Ada indikasi curah hujan/air).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+*Klasifikasi Akhir: **Bahaya** (Skor ≥ 80), **Waspada** (Skor ≥ 50), **Aman** (Skor < 50).*
 
-### Premium Partners
+## IoT API Documentation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Perangkat keras (misalnya ESP32) dapat mengirimkan data lingkungan secara langsung ke sistem melalui jalur *endpoint* berikut:
 
-## Contributing
+**`POST /api/sensors/data`**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# projek-pkm
+```json
+{
+    "device_id": "ESP-001",
+    "temperature": 28.5,
+    "humidity": 80.0,
+    "rainfall": 12.5,
+    "water_level": 5.0
+}
